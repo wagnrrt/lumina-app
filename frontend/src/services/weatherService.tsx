@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
 // Configurar instância base
 const api = axios.create({
@@ -9,10 +9,12 @@ const api = axios.create({
   }
 })
 
-// GET request
-export async function getWeatherData(id: string): Promise<Response> {
+// GET request usando query param
+export async function getWeatherData(location: string) {
   try {
-    const { data } = await api.get<Response>(`/${id}`)
+    const { data } = await api.get('/', {
+      params: { location }
+    })
     return data
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -1,17 +1,17 @@
-import { Cloud, MapPin, Search, Sun, Thermometer, Wind } from 'lucide-react'
-import { Input } from './components/ui/input'
 import { useEffect, useState } from 'react'
-import { getWeatherData } from './services/weatherService'
 import type { WeatherData } from './types'
-import { Rain } from './components/icons'
+import { getWeatherData } from './services/weatherService'
+import { Input } from './components/ui/input'
+import { Card, CardTitle } from './components/ui/card'
+import { Cloud, LoaderCircle, MapPin, Rainbow, Search, SunsetIcon } from 'lucide-react'
 
 function App() {
-
   const [city, setCity] = useState<string>('São Paulo')
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [searchInput, setSearchInput] = useState<string>('')
+
 
   const fetchWeather = async (query: string) => {
     setLoading(true)
@@ -19,8 +19,13 @@ function App() {
     try {
       const data = await getWeatherData(query)
       setWeather(data)
+
     } catch (err) {
-      setError('Could not fetch weather data. Please try again.')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Could not fetch weather data. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -41,31 +46,35 @@ function App() {
 
   const getWeatherIcon = (condition: string) => {
     const cond = condition.toLowerCase()
-    if (cond.includes('sun') || cond.includes('clear')) return <Sun className="w-8 h-8 text-zinc-100" />
-    if (cond.includes('rain') || cond.includes('drizzle')) return <Rain className="w-8 h-8 text-zinc-100" />
-    return <Cloud className="w-8 h-8 text-zinc-100" />
+    if (cond.includes('sun') || cond.includes('clear'))
+      return <SunsetIcon className="w-8 h-8 " />
+    if (cond.includes('rain') || cond.includes('drizzle'))
+      return <Rainbow className="w-8 h-8 " />
+    return <Cloud className="w-8 h-8 " />
   }
 
   return (
+    <div className="min-h-screen p-6 md:p-10 font-sans selection:bg-primary selection:text-primary-foreground">
+      <div className="2xl:mx-40 space-y-6">
 
-    <div className="min-h-screen selection:bg-zinc-100 selection:text-zinc-900">
-      <div className="max-w-5xl mx-auto space-y-8 py-5">
-
-        {/* Header & Search */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">Lumina Weather</h1>
-            <p className="text-muted-foreground text-sm">Minimalist atmospheric tracking.</p>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-background">
+              <Cloud className="w-5 h-5" />
+            </div>
+            <div className="leading-none">
+              <h1 className="text-lg font-bold tracking-tight">Lumina</h1>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Weather Engine</p>
+            </div>
           </div>
 
-          <form className="relative w-full md:w-80 group" onSubmit={handleSearch}>
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none transition-colors group-focus-within:text-zinc-50 text-muted-foreground">
-              <Search size={16} />
-            </div>
+          <form onSubmit={handleSearch} className="relative w-full md:w-95 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-zinc-100 transition-colors w-4 h-4" />
+
             <Input
               type="text"
-              className="w-full pl-10 pr-4 text-sm "
-              placeholder="Search location..."
+              className="w-full py-2.5 pl-11 pr-4 text-sm"
+              placeholder="Pesquisar cidade..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
@@ -73,150 +82,133 @@ function App() {
         </header>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
-            <div className="w-8 h-8 border-2 border-zinc-800 border-t-zinc-400 rounded-full animate-spin" />
-            <p className="text-zinc-500 animate-pulse text-sm">Retrieving atmospheric data...</p>
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <LoaderCircle className="w-6 h-6 animate-spin" />
+            <p className="text-muted-foreground text-[12px] uppercase tracking-[0.3em]">Mapeando troposfera...</p>
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center h-[60vh]">
-            <p className="text-destructive bg-destructive/5 border border-destructive/20 px-4 py-2 rounded-lg text-sm">{error}</p>
+          <div className="flex items-center justify-center">
+            <p className="text-muted-foreground text-[12px] uppercase tracking-widest">{error}</p>
           </div>
         ) : weather ? (
-          <main className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <main className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-in fade-in duration-1000">
 
-            {/* Current Weather Card */}
-            <div className="md:col-span-3 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 md:p-12 relative overflow-hidden backdrop-blur-sm">
-              <div className="relative z-10 flex flex-col md:flex-row h-full justify-between items-start md:items-center gap-12">
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-zinc-400">
-                    <MapPin className="w-4 h-4" />
-                    <span className="text-sm font-medium">{weather.city}, {weather.country}</span>
-                  </div>
-                  <div className="flex items-end gap-6">
-                    <span className="text-8xl font-light tracking-tighter leading-none">{Math.round(weather.temperature)}°</span>
-                    <div className="flex flex-col pb-2">
-                      <span className="text-2xl font-medium text-zinc-100 capitalize">{weather.condition}</span>
-                      <span className="text-zinc-500">{weather.description}</span>
+            {/* Seção Principal (3/4 da tela) */}
+            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 grid grid-rows-2 gap-6">
+                <Card className="px-6 justify-between">
+                  <CardTitle className="relative z-10 flex justify-between items-start">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <MapPin className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{weather.city}, {weather.country}</span>
+                      </div>
+                      <h2 className="text-8xl md:text-9xl font-light tracking-tighter">{Math.round(weather.temperature)}°</h2>
                     </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 w-full md:w-auto">
-                  <Metric icon={<Thermometer />} label="High" value={`${Math.round(weather.high)}°`} />
-                  <Metric icon={<Thermometer className="rotate-180" />} label="Low" value={`${Math.round(weather.low)}°`} />
-                  <Metric icon={<Wind />} label="Wind" value={`${weather.windSpeed} km/h`} />
-                  <Metric icon={<Sun className="w-4 h-4" />} label="UV" value={weather.uvIndex.toString()} />
-                </div>
-              </div>
-            </div>
-
-            {/* Sun Cycle Info */}
-            <div className="md:col-span-1 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 backdrop-blur-sm flex flex-col justify-center">
-              <div className="space-y-6">
-                <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.2em]">Sun Cycle</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Sunrise</span>
-                    <span className="text-sm font-medium">{weather.sunrise}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Sunset</span>
-                    <span className="text-sm font-medium">{weather.sunset}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Humidity & Visibility */}
-            <div className="md:col-span-1 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 backdrop-blur-sm flex flex-col justify-center">
-              <div className="space-y-6">
-                <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.2em]">Atmosphere</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Humidity</span>
-                    <span className="text-sm font-medium">{weather.humidity}%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Visibility</span>
-                    <span className="text-sm font-medium">{weather.visibility} km</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pressure */}
-            <div className="md:col-span-1 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 backdrop-blur-sm flex flex-col justify-center">
-              <div className="space-y-6">
-                <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.2em]">Pressure</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Barometer</span>
-                    <span className="text-sm font-medium">{weather.pressure} hPa</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-400">Status</span>
-                    <span className="text-sm font-medium">Stable</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Hourly Forecast */}
-            <div className="md:col-span-3 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 backdrop-blur-sm">
-              <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-8">Hourly Forecast</h3>
-              <div className="flex gap-12 overflow-x-auto pb-4 scrollbar-hide">
-                {weather.hourly.map((h, i) => (
-                  <div key={i} className="flex flex-col items-center gap-4 min-w-15">
-                    <span className="text-xs text-zinc-500 font-medium whitespace-nowrap">{h.time}</span>
-                    <div className="text-zinc-400">
-                      {getWeatherIcon(h.condition)}
+                    <div className="bg-primary text-black p-5 rounded-2xl">
+                      {getWeatherIcon(weather.condition)}
                     </div>
-                    <span className="text-lg font-medium">{Math.round(h.temp)}°</span>
+                  </CardTitle>
+                  <div>
+                    <p className="text-3xl font-medium tracking-tight">{weather.condition}</p>
+                    <p className="text-sm">{weather.description}</p>
                   </div>
-                ))}
+                </Card>
+
+                <Card className="px-6">
+                  <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-8">Fluxo de Temperatura (24h)</h3>
+                  <div className="flex gap-12 overflow-x-auto pb-4 px-2 scrollbar-hide">
+                    {weather.hourly.map((h, i) => (
+                      <div key={i} className="flex flex-col items-center gap-4 min-w-15 group">
+                        <span className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">{h.time}</span>
+                        <div className="transition-transform group-hover:scale-110">
+                          {getWeatherIcon(h.condition)}
+                        </div>
+                        <span className="text-lg font-medium tracking-tighter">{Math.round(h.temp)}°</span>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
               </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <MetricCard label="Sensação" value={'°'} sub="Térmica" />
+                <MetricCard label="Vento" value={`${weather.windSpeed}`} unit="km/h" sub="Noroeste" />
+                <MetricCard label="Umidade" value={`${weather.humidity}`} unit="%" sub="Ar externo" />
+                <MetricCard label="Índice UV" value={weather.uvIndex.toString()} sub="Moderado" />
+              </div>
+
+              {/* Hourly Timeline */}
+
+              {/* Dados Atmosféricos Extras */}
+              <div className="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <MetricSub label="Visibilidade" value={`${weather.visibility} km`} />
+                <MetricSub label="Pressão" value={`${weather.pressure} hPa`} />
+                <MetricSub label="Amanhecer" value={weather.sunrise} />
+                <MetricSub label="Entardecer" value={weather.sunset} />
+              </div>
+
             </div>
 
-            {/* Daily Forecast */}
-            <div className="md:col-span-3 bg-zinc-900/30 border border-zinc-800/60 rounded-3xl p-8 backdrop-blur-sm">
-              <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-8">Next 5 Days</h3>
-              <div className="space-y-0">
+            {/* Previsão Estendida (Sidebar) */}
+            <div className="bg-zinc-900/20 border border-zinc-800/50 rounded-[2.5rem] p-8 lg:h-full flex flex-col">
+              <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-10">Previsão 7 Dias</h3>
+              <div className="space-y-8 flex-1">
                 {weather.daily.map((d, i) => (
-                  <div key={i} className={`flex items-center justify-between py-5 ${i !== weather.daily.length - 1 ? 'border-b border-zinc-800/50' : ''}`}>
-                    <span className="w-24 text-sm font-medium">{d.day}</span>
-                    <div className="flex items-center gap-4 flex-1 justify-center">
-                      {getWeatherIcon(d.condition)}
-                      <span className="text-xs text-zinc-500 capitalize">{d.condition}</span>
+                  <div key={i} className="flex items-center justify-between group">
+                    <div className="space-y-0.5">
+                      <p className="text-[11px] font-bold text-zinc-400 group-hover:text-white transition-colors uppercase tracking-tight">{d.day}</p>
+                      <p className="text-[9px] text-zinc-700"></p>
                     </div>
-                    <div className="w-24 flex justify-end gap-4">
-                      <span className="font-semibold">{Math.round(d.high)}°</span>
-                      <span className="text-zinc-500">{Math.round(d.low)}°</span>
+                    <div className="flex items-center gap-4">
+                      {getWeatherIcon(d.condition,)}
+                      <div className="flex items-center gap-3 w-16 justify-end">
+                        <span className="text-xs font-bold">{Math.round(d.high)}°</span>
+                        <span className="text-xs text-zinc-700">{Math.round(d.low)}°</span>
+                      </div>
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="mt-10 pt-6 border-t border-zinc-800/30">
+                <p className="text-[10px] text-zinc-700 italic text-center leading-relaxed">
+                  Semana
+                </p>
               </div>
             </div>
 
           </main>
         ) : null}
 
-        <footer className="text-center py-12 text-zinc-700 text-[10px] tracking-[0.3em] uppercase">
-          &copy; Lumina Systems &bull; Minimal Weather
+        <footer className="pt-16 pb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-zinc-900">
+          <span className="text-[9px] text-zinc-800 uppercase tracking-[0.4em]">Lumina Intelligence &copy; 2025</span>
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-1 bg-zinc-700 rounded-full" />
+            <span className="text-[9px] text-zinc-700 uppercase tracking-[0.2em]">Sistemas Operacionais</span>
+          </div>
         </footer>
-
       </div>
     </div>
   )
-}
+};
 
-const Metric: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
-  <div className="flex flex-col gap-1">
-    <div className="flex items-center gap-2 text-zinc-500">
-      {icon}
-      <span className="text-[10px] font-semibold uppercase tracking-widest">{label}</span>
+const MetricCard: React.FC<{ label: string, value: string, unit?: string, sub: string }> = ({ label, value, unit, sub }) => (
+  <div className="bg-zinc-900/20 border border-zinc-800/50 rounded-[1.8rem] p-6 flex flex-col justify-between group">
+    <div className="space-y-0.5">
+      <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{label}</span>
+      <p className="text-[9px] text-zinc-800 uppercase">{sub}</p>
     </div>
-    <span className="text-xl font-medium tracking-tight">{value}</span>
+    <div className="flex items-baseline gap-1 mt-4">
+      <span className="text-2xl font-light tracking-tight">{value}</span>
+      {unit && <span className="text-[10px] text-zinc-700 font-bold uppercase">{unit}</span>}
+    </div>
+  </div>
+)
+
+const MetricSub: React.FC<{ label: string, value: string }> = ({ label, value }) => (
+  <div className="bg-zinc-900/20 border border-zinc-800/50 rounded-2xl p-5 text-center space-y-1">
+    <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em]">{label}</p>
+    <p className="text-lg font-light tracking-tight">{value}</p>
   </div>
 )
 
