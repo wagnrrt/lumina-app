@@ -128,8 +128,16 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
+@supports (scrollbar-width: thin) {
+  html {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    scrollbar-color: #64748b transparent;
+  }
+}
