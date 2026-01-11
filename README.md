@@ -31,7 +31,7 @@ src/
 
 ## Stack Tecnológica
 
-- **React 18** - Framework UI
+- **React 19** - Framework UI
 - **TypeScript** - Type safety
 - **Vite** - Build tool e dev server
 - **Tailwind CSS** - Utility-first CSS
