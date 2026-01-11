@@ -1,4 +1,4 @@
-# Lumina Weather - Frontend
+# Lumina App - Frontend
 
 Aplicativo de meteorologia moderno e responsivo construído com React, TypeScript e Vite.
 
