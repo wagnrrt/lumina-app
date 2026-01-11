@@ -2,7 +2,7 @@
 
 Aplicativo de meteorologia moderno e responsivo construído com React, TypeScript e Vite.
 
-## 🏗️ Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 src/
@@ -29,17 +29,17 @@ src/
 └── main.tsx          # Entry point
 ```
 
-## 🚀 Tecnologias
+## Stack Tecnológica
 
 - **React 18** - Framework UI
 - **TypeScript** - Type safety
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **Recharts** - Gráficos
-- **Lucide React** - Ícones
-- **shadcn/ui** - Componentes base
+- **Vite** - Build tool e dev server
+- **Tailwind CSS** - Utility-first CSS
+- **Recharts** - Biblioteca de gráficos
+- **Lucide React** - Sistema de ícones
+- **shadcn/ui** - Componentes base acessíveis
 
-## 📦 Instalação
+## Instalação
 
 ```bash
 # Instalar dependências
@@ -52,70 +52,70 @@ cp .env.example .env
 VITE_API_URL=http://localhost:3000/api
 ```
 
-## 🏃 Executar
+## Funcionalidades
 
-```bash
-# Desenvolvimento
-npm run dev
+- Busca de cidades em tempo real
+- Previsão estendida de 15 dias
+- Detalhamento horário com previsão de 24 horas
+- Gráficos interativos de temperatura e sensação térmica
+- Métricas completas: UV index, vento, umidade, pressão, visibilidade
+- Sistema de alertas de tempestades severas
+- Indicadores de nascer e pôr do sol
+- Fases da lua
+- Interface totalmente responsiva (mobile-first)
+- Dark mode nativo
+- Animações e transições suaves
 
-# Build de produção
-npm run build
-
-# Preview do build
-npm run preview
-```
-
-## 🎨 Features
-
-- ✅ Busca de cidades
-- ✅ Previsão de 15 dias
-- ✅ Detalhamento horário (24h)
-- ✅ Gráficos de temperatura
-- ✅ Métricas detalhadas (UV, vento, umidade, etc)
-- ✅ Alerta de tempestades
-- ✅ Totalmente responsivo
-- ✅ Dark mode nativo
-
-## 🔌 Integração com Backend
+## Integração com Backend
 
 O frontend espera as seguintes rotas do backend:
 
 ```typescript
-GET /api/weather?city={cityName}
+GET /
 
-// Resposta esperada: WeatherData (ver src/types/weather.ts)
+Query Parameters
+- location (string): city or location name
+
+    Exemplo de Request
+GET http://localhost:3000/?location=Araras
+
+// Resposta esperada segue a interface WeatherData
+// Consulte src/types/weather.ts para estrutura completa
 ```
 
-## 📱 Componentes Principais
+### Exemplo de Resposta
 
-### `useWeather` Hook
-Gerencia estado de carregamento, erro e dados do clima.
-
-### `MainWeatherCard`
-Exibe temperatura atual, condições e localização.
-
-### `HourlyForecast`
-Mostra previsão hora a hora com gráfico.
-
-### `ForecastSidebar`
-Lista de 15 dias de previsão.
-
-## 🎯 Arquitetura
-
-A estrutura segue princípios de **separação de responsabilidades**:
-
-- **Components**: UI pura, sem lógica de negócio
-- **Hooks**: Lógica reutilizável e estado
-- **Services**: Comunicação com APIs
-- **Utils**: Funções auxiliares puras
-- **Types**: Definições de tipos centralizadas
-
-## 🌐 Variáveis de Ambiente
-
-```bash
-VITE_API_URL=http://localhost:3000/api  # URL base do backend
+```json
+{
+  "resolvedAddress": "São Paulo, BR",
+  "temperature": 24.5,
+  "feelslike": 26.2,
+  "icon": "partly-cloudy-day",
+  "visibility": 10,
+  "pressure": 1013,
+  "cloudCover": 45,
+  "daily": [
+    {
+      "icon": "partly-cloudy-day",
+      "condition": "Parcialmente Nublado",
+      "description": "Céu parcialmente coberto com possibilidade de chuvas isoladas",
+      "temp": 24.5,
+      "high": 28,
+      "low": 18,
+      "precipProb": 30,
+      "windSpeed": 15,
+      "humidity": 65,
+      "uvIndex": 7,
+      "hours": [...]
+    }
+  ]
+}
 ```
 
-## 📄 Licença
+## Licença
 
-MIT
+MIT License - veja o arquivo LICENSE para detalhes
+
+## Contato
+
+Para questões e suporte, abra uma issue no repositório.
