@@ -58,10 +58,7 @@ function App() {
                   <MetricCard
                     icon={<Thermometer className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                     label="Sensação"
-                    value={selectedDayIndex === 0
-                      ? `${Math.round(weather.feelslike)}°`
-                      : `${Math.round(selectedDay.feelslikeMax)}°`
-                    }
+                    value={selectedDay ? `${Math.round(selectedDay.feelslikeMax)}°` : '--'}
                     sub={selectedDayIndex === 0 ? 'Térmica' : `Mín: ${Math.round(selectedDay.feelslikeMin)}°`}
                   />
                   <MetricCard
@@ -92,20 +89,17 @@ function App() {
                 <MetricSub
                   icon={<Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
                   label="Visibilidade"
-                  value={selectedDayIndex === 0 ? `${weather.visibility} km` : `${selectedDay.visibility} km`}
+                  value={`${selectedDay.visibility} km`}
                 />
                 <MetricSub
                   icon={<Gauge className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
                   label="Pressão"
-                  value={selectedDayIndex === 0 ? `${weather.pressure} hPa` : `${selectedDay.pressure} hPa`}
+                  value={`${selectedDay.pressure} hPa`}
                 />
                 <MetricSub
                   icon={<Cloud className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
                   label="Nuvens"
-                  value={selectedDayIndex === 0
-                    ? `${Math.round(weather.cloudCover)}%`
-                    : `${Math.round(selectedDay.cloudCover)}%`
-                  }
+                  value={`${Math.round(selectedDay.cloudCover)}%`}
                 />
                 <MetricSub
                   icon={<Sunrise className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
@@ -133,7 +127,7 @@ function App() {
               daily={weather.daily}
               selectedDayIndex={selectedDayIndex}
               onSelectDay={setSelectedDayIndex}
-              weatherIcon={weather.icon}
+              weatherIcon={selectedDay.icon}
             />
           </main>
         ) : null}
