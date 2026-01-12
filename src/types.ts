@@ -33,11 +33,5 @@ export interface DailyWeather {
 
 export interface WeatherData {
   resolvedAddress: string
-  temperature: number
-  feelslike: number
-  icon: string
-  visibility: number
-  pressure: number
-  cloudCover: number
   daily: DailyWeather[]
 }
