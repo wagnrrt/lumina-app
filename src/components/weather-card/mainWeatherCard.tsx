@@ -15,7 +15,7 @@ export const MainWeatherCard = ({ weather, selectedDay, selectedDayIndex }: Main
     <Card className="p-4 sm:p-5 md:p-6 relative overflow-hidden flex flex-col">
       <div className="absolute -right-8 sm:-right-12 -top-8 sm:-top-12 opacity-[0.03] pointer-events-none">
         {getWeatherIcon(
-          selectedDay.icon || weather.icon,
+          selectedDay.icon || selectedDay.icon,
           'w-32 h-32 sm:w-40 sm:h-40 md:w-60 md:h-60 lg:w-80 lg:h-80'
         )}
       </div>
@@ -36,7 +36,7 @@ export const MainWeatherCard = ({ weather, selectedDay, selectedDayIndex }: Main
 
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
             <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light tracking-tighter">
-              {selectedDayIndex === 0 ? Math.round(weather.temperature) : Math.round(selectedDay.temp)}°
+              {Math.round(selectedDay.temp)}°
             </h2>
             <div className="flex flex-col gap-1.5 sm:gap-2">
               <div className="flex items-center gap-0.5 sm:gap-1">
