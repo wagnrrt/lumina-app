@@ -3,7 +3,7 @@ import axios from 'axios'
 // Configurar instância base
 const api = axios.create({
   baseURL: import.meta.env.API_BASE_URL,
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json'
   }
