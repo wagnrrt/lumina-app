@@ -2,6 +2,11 @@
 
 Aplicativo de meteorologia moderno e responsivo construído com React, TypeScript e Vite.
 
+## Sobre o Projeto
+
+Este projeto foi inspirado no desafio **Weather API Wrapper Service** do roadmap.sh:  
+https://roadmap.sh/projects/weather-api-wrapper-service
+
 ## Estrutura do Projeto
 
 ```
@@ -119,4 +124,3 @@ MIT License - veja o arquivo LICENSE para detalhes
 ## Contato
 
 Para questões e suporte, abra uma issue no repositório.
-https://lumina-weather.vercel.app
